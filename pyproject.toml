@@ -6,12 +6,12 @@ authors = ["Levy Nunes <levy.vix@gmail.com>"]
 repository = "https://github.com/levyvix/ascii-cli"
 documentation = "https://levyvix.github.io/ascii-cli/"
 readme = "README.md"
-packages = [
-  {include = "ascii_cli"}
-]
+packages = [{ include = "ascii_cli" }]
 
 [tool.poetry.dependencies]
-python = ">=3.8,<4.0"
+python = ">=3.9,<4.0"
+pyfiglet = "^1.0.2"
+typer = "^0.15.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
@@ -19,16 +19,16 @@ deptry = "^0.16.2"
 pyright = "^1.1.382"
 pre-commit = "^3.4.0"
 tox = "^4.11.1"
+taskipy = "^1.14.1"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.4.2"
 mkdocs-material = "^9.2.7"
-mkdocstrings = {extras = ["python"], version = "^0.26.1"}
+mkdocstrings = { extras = ["python"], version = "^0.26.1" }
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
 
 
 [tool.pyright]
@@ -36,57 +36,80 @@ include = ["ascii_cli"]
 typeCheckingMode = "strict"
 venvPath = "."
 venv = ".venv"
+reportAttributeAccessIssue = false
+reportUnknownMemberType = false
+reportMissingTypeStubs = false
+
+[tool.mypy]
+disable_error_code = "import-untyped"
+
+[tool.poetry.scripts]
+ascii = "ascii_cli.cli:app"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
 
 [tool.ruff]
 target-version = "py39"
 line-length = 120
 fix = true
 select = [
-    # flake8-2020
-    "YTT",
-    # flake8-bandit
-    "S",
-    # flake8-bugbear
-    "B",
-    # flake8-builtins
-    "A",
-    # flake8-comprehensions
-    "C4",
-    # flake8-debugger
-    "T10",
-    # flake8-simplify
-    "SIM",
-    # isort
-    "I",
-    # mccabe
-    "C90",
-    # pycodestyle
-    "E", "W",
-    # pyflakes
-    "F",
-    # pygrep-hooks
-    "PGH",
-    # pyupgrade
-    "UP",
-    # ruff
-    "RUF",
-    # tryceratops
-    "TRY",
+  # flake8-2020
+  "YTT",
+  # flake8-bandit
+  "S",
+  # flake8-bugbear
+  "B",
+  # flake8-builtins
+  "A",
+  # flake8-comprehensions
+  "C4",
+  # flake8-debugger
+  "T10",
+  # flake8-simplify
+  "SIM",
+  # isort
+  "I",
+  # mccabe
+  "C90",
+  # pycodestyle
+  "E",
+  "W",
+  # pyflakes
+  "F",
+  # pygrep-hooks
+  "PGH",
+  # pyupgrade
+  "UP",
+  # ruff
+  "RUF",
+  # tryceratops
+  "TRY",
 ]
 ignore = [
-    # LineTooLong
-    "E501",
-    # DoNotAssignLambda
-    "E731",
+  # LineTooLong
+  "E501",
+  # DoNotAssignLambda
+  "E731",
 ]
 
 [tool.ruff.format]
 preview = true
 
 
-
 [tool.ruff.per-file-ignores]
 "tests/*" = ["S101"]
+
+
+[tool.taskipy.tasks]
+install = "echo '🚀 Creating virtual environment using pyenv and poetry' && poetry install && poetry run pre-commit install && poetry shell"
+check = "echo '🚀 Checking Poetry lock file consistency with pyproject.toml: Running poetry check --lock' && poetry check --lock && echo '🚀 Linting code: Running pre-commit' && poetry run pre-commit run -a && echo '🚀 Static type checking: Running pyright' && poetry run pyright && echo '🚀 Checking for obsolete dependencies: Running deptry' && poetry run deptry ."
+test = "echo '🚀 Testing code: Running pytest' && poetry run pytest --doctest-modules"
+clean-build = "echo '🚀 Cleaning build artifacts' && rm -rf dist"
+build = "task clean-build && echo '🚀 Creating wheel file' && poetry build"
+publish = "echo '🚀 Publishing: Dry run.' && poetry config pypi-token.pypi ${PYPI_TOKEN} && poetry publish --dry-run && echo '🚀 Publishing.' && poetry publish"
+build-and-publish = "task build && task publish"
+docs-test = "echo '🚀 Testing documentation build' && poetry run mkdocs build -s"
+docs = "echo '🚀 Building and serving documentation' && poetry run mkdocs serve"
+help = "python -c \"import toml; with open('pyproject.toml', 'r') as f: data = toml.load(f); tasks = data['tool']['taskipy']['tasks']; [print(f'\\033[36m{task:20}\\033[0m {desc.split(\"##\")[1].strip()}') for task, desc in tasks.items() if '##' in desc]\""

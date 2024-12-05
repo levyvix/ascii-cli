@@ -5,7 +5,7 @@ site_description: Print something in ASCII format.
 site_author: Levy Nunes
 edit_uri: edit/main/docs/
 repo_name: levyvix/ascii-cli
-copyright: Maintained by <a href="https://levyvix.com">Florian</a>.
+copyright: Maintained by <a href="https://www.linkedin.com/in/levyvix/">Levy Nunes</a>.
 
 nav:
   - Home: index.md
