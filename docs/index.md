@@ -6,3 +6,9 @@
 [![License](https://img.shields.io/github/license/levyvix/ascii-cli)](https://img.shields.io/github/license/levyvix/ascii-cli)
 
 Print something in ASCII format.
+
+## Installation
+
+```bash
+pip install ascii-cli
+```
