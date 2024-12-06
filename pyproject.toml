@@ -44,7 +44,7 @@ reportMissingTypeStubs = false
 disable_error_code = "import-untyped"
 
 [tool.poetry.scripts]
-ascii = "ascii_cli.cli:app"
+ascii = "ascii_cli.__main__:app"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
